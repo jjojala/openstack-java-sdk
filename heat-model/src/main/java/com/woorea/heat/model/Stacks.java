@@ -6,19 +6,19 @@ import java.util.List;
 
 public class Stacks implements Iterable<Stack>, Serializable {
 
-								private List<Stack> list;
+	private List<Stack> list;
 
-								public List<Stack> getList() {
-																return list;
-								}
+	public List<Stack> getList() {
+		return list;
+	}
 
-								@Override
-								public Iterator<Stack> iterator() {
-																return list.iterator();
-								}
+	@Override
+	public Iterator<Stack> iterator() {
+		return list.iterator();
+	}
 
-								@Override
-								public String toString() {
-																return "Stacks [list=" + list + "]";
-								}
+	@Override
+	public String toString() {
+		return "Stacks [list=" + list + "]";
+	}
 }

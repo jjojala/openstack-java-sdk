@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class Stack implements Serializable {
 
-								@Override
-								public String toString() {
-																final StringBuilder buffer = new StringBuilder();
-																buffer.append(getClass().getSimpleName())
-																								.append(" []");
+	@Override
+	public String toString() {
+		final StringBuilder buffer = new StringBuilder();
+		buffer.append(getClass().getSimpleName())
+			.append(" []");
 
-																return buffer.toString();
-								}
+		return buffer.toString();
+	}
 }
