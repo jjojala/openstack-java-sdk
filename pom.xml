@@ -32,6 +32,8 @@
 		<module>quantum-model</module>
 		<module>ceilometer-model</module>
 		<module>ceilometer-client</module>
+		<module>heat-model</module>
+		<module>heat-client</module>
 		<module>openstack-client-connectors</module>
 	</modules>
 
