@@ -72,8 +72,8 @@ public class HeatClient {
 		final String heatEndpoint = KeystoneUtils.findEndpointURL(
 			access.getServiceCatalog(), "orchestration", "RegionOne", "public");
 
-		final Heat heat = new Heat(String.format("%s/%s",
-			heatEndpoint, access.getToken().getTenant().getId()));
+		System.out.println("Heat endpoint: " + heatEndpoint);
+		final Heat heat = new Heat(heatEndpoint);
 
 		heat.token(access.getToken().getId());
 

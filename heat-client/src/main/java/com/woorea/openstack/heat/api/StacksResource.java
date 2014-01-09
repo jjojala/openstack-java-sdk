@@ -35,7 +35,7 @@ public class StacksResource {
 	public class List extends OpenStackRequest<Stacks> {
 
 		public List() {
-			super(client, HttpMethod.GET, "/stacks/", null, Stacks.class);
+			super(client, HttpMethod.GET, "/stacks", null, Stacks.class);
 		}
 	}
 
