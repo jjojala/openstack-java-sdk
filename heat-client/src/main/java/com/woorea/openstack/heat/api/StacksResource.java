@@ -1,8 +1,8 @@
-package com.woorea.heat.api;
+package com.woorea.openstack.heat.api;
 
-import com.woorea.heat.model.Stack;
-import com.woorea.heat.model.StackForCreate;
-import com.woorea.heat.model.Stacks;
+import com.woorea.openstack.heat.model.Stack;
+import com.woorea.openstack.heat.model.StackForCreate;
+import com.woorea.openstack.heat.model.Stacks;
 import com.woorea.openstack.base.client.Entity;
 import com.woorea.openstack.base.client.HttpMethod;
 import com.woorea.openstack.base.client.OpenStackClient;

@@ -1,8 +1,8 @@
-package com.woorea.heat.model;
+package com.woorea.openstack.heat.model;
 
 import java.io.Serializable;
 
-public class Stack implements Serializable {
+public class Template implements Serializable {
 
 	@Override
 	public String toString() {

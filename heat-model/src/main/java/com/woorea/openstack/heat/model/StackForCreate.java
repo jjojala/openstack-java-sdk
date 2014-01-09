@@ -1,4 +1,4 @@
-package com.woorea.heat.model;
+package com.woorea.openstack.heat.model;
 
 import java.io.Serializable;
 import java.util.HashMap;

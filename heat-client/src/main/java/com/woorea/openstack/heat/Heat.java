@@ -1,6 +1,6 @@
-package com.woorea.heat;
+package com.woorea.openstack.heat;
 
-import com.woorea.heat.api.StacksResource;
+import com.woorea.openstack.heat.api.StacksResource;
 import com.woorea.openstack.base.client.OpenStackClient;
 import com.woorea.openstack.base.client.OpenStackClientConnector;
 
@@ -19,5 +19,6 @@ public class Heat extends OpenStackClient {
 	public StacksResource stacks() {
 		return STACKS;
 	}
+
 	private final StacksResource STACKS;
 }
