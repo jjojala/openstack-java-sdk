@@ -6,21 +6,21 @@ import java.util.Iterator;
 import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ResourceTypes implements Iterable<ResourceType>, Serializable {
+public class ResourceTypes implements Iterable<String>, Serializable {
 
 	@JsonProperty("resource_types")
-	private List<ResourceType> resourceTypes;
+	private List<String> resourceTypes;
 
-	public final void setResourceTypes(final List<ResourceType> types) {
-		this.resourceTypes = new ArrayList<ResourceType>(types);
+	public final void setResourceTypes(final List<String> types) {
+		this.resourceTypes = new ArrayList<String>(types);
 	}
 
-	public final List<ResourceType> getResourceTypes() {
+	public final List<String> getResourceTypes() {
 		return resourceTypes;
 	}
 
 	@Override
-	public Iterator<ResourceType> iterator() {
+	public Iterator<String> iterator() {
 		return resourceTypes.iterator();
 	}
 }

@@ -148,7 +148,7 @@ public class HeatClient {
 
 	public static int resourceTypeList(final Heat heat) {
 		final ResourceTypes types = heat.resources().listResourceTypes().execute();
-		for (final ResourceType type: types.getResourceTypes()) {
+		for (final String type: types.getResourceTypes()) {
 			System.out.println(type);
 		}
 
