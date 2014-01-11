@@ -50,7 +50,7 @@ public class HeatClient {
 				}
 
 				if ("stack-delete".equals(args[1])) {
-					System.exit(stackDelete(heat /* TODO: rest of the params ... */));
+					System.exit(stackDelete(heat, args[2], args[3]));
 				}
 
 				if ("stack-list".equals(args[1])) {
@@ -194,8 +194,10 @@ public class HeatClient {
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
-	public static int stackDelete(final Heat heat) {
-		throw new UnsupportedOperationException("TODO: implement");
+	public static int stackDelete(final Heat heat, final String stackName,
+			final String stackId) {
+		heat.stacks().delete(stackName, stackId).execute();
+		return 0;
 	}
 
 	public static int stackList(final Heat heat) {
