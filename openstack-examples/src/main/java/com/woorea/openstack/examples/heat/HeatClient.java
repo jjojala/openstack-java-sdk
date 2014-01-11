@@ -13,7 +13,11 @@ import com.woorea.openstack.keystone.Keystone;
 import com.woorea.openstack.keystone.model.Access;
 import com.woorea.openstack.keystone.model.authentication.UsernamePassword;
 import com.woorea.openstack.keystone.utils.KeystoneUtils;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class HeatClient {
 
