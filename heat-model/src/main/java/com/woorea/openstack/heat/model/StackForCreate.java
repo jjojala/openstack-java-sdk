@@ -1,6 +1,7 @@
 package com.woorea.openstack.heat.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,62 +28,66 @@ public class StackForCreate implements Serializable {
 		this.stackName = stackName;
 		this.template = template;
 		this.environment = environment;
-		this.files = new HashMap<String, String>(files);
-		this.parameters = new HashMap<String, String>(parameters);
+		setFiles(files);
+		setParameters(parameters);
 		this.timeoutMins = Long.toString(timeoutMins, 10 /* radix for decimal number */);
 	}
 
-	public String getStackName() {
+	public final String getStackName() {
 		return stackName;
 	}
 
-	public void setName(final String stackName) {
+	public final void setName(final String stackName) {
 		this.stackName = stackName;
 	}
 
-	public String getTemplate() {
+	public final String getTemplate() {
 		return template;
 	}
 
-	public void setTemplate(final String template) {
+	public final void setTemplate(final String template) {
 		this.template = template;
 	}
 
-	public String getEnvironment() {
+	public final String getEnvironment() {
 		return environment;
 	}
 
-	public void setEnvironment(final String environment) {
+	public final void setEnvironment(final String environment) {
 		this.environment = environment;
 	}
 
-	public Map<String, String> getFiles() {
+	public final Map<String, String> getFiles() {
 		return files;
 	}
 
-	public void setFiles(final Map<String, String> files) {
-		this.files = files;
+	public final void setFiles(final Map<String, String> files) {
+		this.files = files != null
+			? new HashMap<String, String>(files)
+			: Collections.<String, String>emptyMap();
 	}
 
-	public Map<String, String> getParameters() {
+	public final Map<String, String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(final Map<String, String> parameters) {
-		this.parameters = parameters;
+	public final void setParameters(final Map<String, String> parameters) {
+		this.parameters = parameters != null
+			? new HashMap<String, String>(parameters)
+			: Collections.<String, String>emptyMap();
 	}
 
-	public String getTimeout() {
+	public final String getTimeout() {
 		return timeoutMins;
 	}
 
-	public void setTimeout(final String timeoutMins) {
+	public final void setTimeout(final String timeoutMins) {
 		Long.parseLong(timeoutMins, 10 /* radix */); // validates the value
 		this.timeoutMins = timeoutMins;
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		final StringBuilder buffer = new StringBuilder();
 		buffer.append(getClass().getSimpleName())
 			.append(" [stack_name='").append(stackName)
