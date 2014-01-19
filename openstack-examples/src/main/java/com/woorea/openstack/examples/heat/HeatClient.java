@@ -54,11 +54,14 @@ public class HeatClient {
 				}
 
 				if ("resource-type-list".equals(args[1])) {
-					System.exit(resourceTypeList(heat));
+					System.exit(
+						HeatResourceTypeClient.resourceTypeList(heat));
 				}
 
 				if ("resource-type-show".equals(args[1])) {
-					System.exit(resourceTypeShow(heat, args[2]));
+					System.exit(
+						HeatResourceTypeClient.resourceTypeShow(
+							heat, args[2]));
 				}
 
 				if ("stack-resource-list".equals(args[1])) {
@@ -181,23 +184,6 @@ public class HeatClient {
 		heat.token(access.getToken().getId());
 
 		return heat;
-	}
-
-	public static int resourceTypeList(final Heat heat) {
-		final ResourceTypes types = heat.resources().listResourceTypes().execute();
-		for (final String type: types.getResourceTypes()) {
-			System.out.println(type);
-		}
-
-		return 0;
-	}
-
-	public static int resourceTypeShow(final Heat heat, final String resourceTypeName) {
-		final ResourceType type =
-			heat.resources().showResourceType(resourceTypeName).execute();
-		System.out.println(type);
-
-		return 0;
 	}
 
 	public static int stackResourceList(final Heat heat, final String stackName,

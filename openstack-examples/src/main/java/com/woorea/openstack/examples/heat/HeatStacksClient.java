@@ -64,4 +64,8 @@ public class HeatStacksClient {
 
 		return 0;
 	}
+
+	private HeatStacksClient() {
+		throw new AssertionError();
+	}
 }
