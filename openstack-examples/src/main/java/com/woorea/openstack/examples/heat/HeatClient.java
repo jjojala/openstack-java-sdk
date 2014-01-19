@@ -5,11 +5,8 @@ import com.woorea.openstack.heat.Heat;
 import com.woorea.openstack.heat.model.Metadata;
 import com.woorea.openstack.heat.model.ResourceType;
 import com.woorea.openstack.heat.model.ResourceTypes;
-import com.woorea.openstack.heat.model.Stack;
-import com.woorea.openstack.heat.model.StackForCreate;
 import com.woorea.openstack.heat.model.StackResource;
 import com.woorea.openstack.heat.model.StackResources;
-import com.woorea.openstack.heat.model.Stacks;
 import com.woorea.openstack.keystone.Keystone;
 import com.woorea.openstack.keystone.model.Access;
 import com.woorea.openstack.keystone.model.authentication.UsernamePassword;
@@ -30,31 +27,30 @@ public class HeatClient {
 
 			if (args.length > 1) {
 
-				final Keystone keystone = getKeystone(
-					props.getProperty("keystoneEndpoint", ExamplesConfiguration.KEYSTONE_ENDPOINT));
-
-				final Access access = getAccess(keystone,
-					props.getProperty("keystoneUser", ExamplesConfiguration.KEYSTONE_USERNAME),
-					props.getProperty("keystonePassword", ExamplesConfiguration.KEYSTONE_USERNAME),
-					props.getProperty("tenant", "admin"));
-
-				final Heat heat = getHeat(keystone, access);
+				final Keystone keystone = getKeystone();
+				final Access access = getAccess(keystone);
+				final Heat heat = getHeat(access);
 
 				if ("stack-create".equals(args[1])) {
-					System.exit(stackCreate(heat, readFile(args[2]), args[3],
-						toMap(Arrays.copyOfRange(args, 4, args.length))));
+					System.exit(HeatStacksClient.stackCreate(
+						heat, readFile(args[2]), args[3],
+						toMap(Arrays.copyOfRange(
+							args, 4, args.length))));
 				}
 
 				if ("stack-update".equals(args[1])) {
-					System.exit(stackUpdate(heat /* TODO: rest of the params... */));
+					System.exit(HeatStacksClient.stackUpdate(
+						heat /* TODO: rest of the params... */));
 				}
 
 				if ("stack-delete".equals(args[1])) {
-					System.exit(stackDelete(heat, args[2], args[3]));
+					System.exit(HeatStacksClient.stackDelete(
+						heat, args[2], args[3]));
 				}
 
 				if ("stack-list".equals(args[1])) {
-					System.exit(stackList(heat));
+					System.exit(HeatStacksClient.stackList(
+						heat));
 				}
 
 				if ("resource-type-list".equals(args[1])) {
@@ -154,19 +150,26 @@ public class HeatClient {
 		return map;
 	}
 
-	public static Keystone getKeystone(final String keystoneEndpoint) {
-		return new Keystone(keystoneEndpoint);
+	public static Keystone getKeystone() {
+		return new Keystone(
+			System.getProperty("keystoneEndpoint",
+				ExamplesConfiguration.KEYSTONE_ENDPOINT));
 	}
 
-	public static Access getAccess(final Keystone keystone,
-		final String user, final String password, final String tenant) {
+	public static Access getAccess(final Keystone keystone) {
+		final String user = System.getProperty("keystoneUser",
+			ExamplesConfiguration.KEYSTONE_USERNAME);
+		final String password = System.getProperty("kaystonePassword",
+			ExamplesConfiguration.KEYSTONE_PASSWORD);
+		final String tenant = System.getProperty("tenant",
+			ExamplesConfiguration.TENANT_NAME);
+
 		return keystone.tokens().authenticate(
-			new UsernamePassword(user, password))
-			.withTenantName(tenant)
-			.execute();
+				new UsernamePassword(user, password))
+			.withTenantName(tenant).execute();
 	}
 
-	public static Heat getHeat(final Keystone keystone, final Access access) {
+	public static Heat getHeat(final Access access) {
 
 		// TODO: region & facing to be configurable?
 		final String heatEndpoint = KeystoneUtils.findEndpointURL(
@@ -178,36 +181,6 @@ public class HeatClient {
 		heat.token(access.getToken().getId());
 
 		return heat;
-	}
-
-	public static int stackCreate(final Heat heat, final String template, final String stackName,
-			final Map<String, String> params) {
-		final StackForCreate request = new StackForCreate(
-			stackName, template, null, null, params, 60);
-		final Stack stack = heat.stacks().create(request).execute();
-		System.out.println(stack);
-
-		return 0;
-	}
-
-	public static int stackUpdate(final Heat heat) {
-		throw new UnsupportedOperationException("TODO: implement");
-	}
-
-	public static int stackDelete(final Heat heat, final String stackName,
-			final String stackId) {
-		heat.stacks().delete(stackName, stackId).execute();
-		return 0;
-	}
-
-	public static int stackList(final Heat heat) {
-
-		final Stacks stacks = heat.stacks().list().execute();
-		for (final Stack stack : stacks.getList()) {
-			System.out.println(stack);
-		}
-
-		return 0;
 	}
 
 	public static int resourceTypeList(final Heat heat) {
