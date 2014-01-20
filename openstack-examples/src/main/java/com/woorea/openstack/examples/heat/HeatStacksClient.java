@@ -25,7 +25,7 @@ public class HeatStacksClient {
 				"stackName", "test-stack");
 
 			// Run all operations in sequence
-			stackCreate(heat, template, stackName, null);
+			create(heat, template, stackName, null);
 			// ...
 		}
 
@@ -35,7 +35,8 @@ public class HeatStacksClient {
 		}
 	}
 
-	public static int stackCreate(final Heat heat, final String template, final String stackName,
+	public static int create(final Heat heat, final String template,
+			final String stackName,
 			final Map<String, String> params) {
 		final StackForCreate request = new StackForCreate(
 			stackName, template, null, null, params, 60);
@@ -45,17 +46,17 @@ public class HeatStacksClient {
 		return 0;
 	}
 
-	public static int stackUpdate(final Heat heat) {
+	public static int update(final Heat heat) {
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
-	public static int stackDelete(final Heat heat, final String stackName,
+	public static int delete(final Heat heat, final String stackName,
 			final String stackId) {
 		heat.stacks().delete(stackName, stackId).execute();
 		return 0;
 	}
 
-	public static int stackList(final Heat heat) {
+	public static int list(final Heat heat) {
 
 		final Stacks stacks = heat.stacks().list().execute();
 		for (final Stack stack : stacks.getList()) {

@@ -27,54 +27,56 @@ public class HeatClient {
 				final Heat heat = getHeat(access);
 
 				if ("stack-create".equals(args[1])) {
-					System.exit(HeatStacksClient.stackCreate(
+					System.exit(HeatStacksClient.create(
 						heat, readFile(args[2]), args[3],
 						toMap(Arrays.copyOfRange(
 							args, 4, args.length))));
 				}
 
 				if ("stack-update".equals(args[1])) {
-					System.exit(HeatStacksClient.stackUpdate(
+					System.exit(HeatStacksClient.update(
 						heat /* TODO: rest of the params... */));
 				}
 
 				if ("stack-delete".equals(args[1])) {
-					System.exit(HeatStacksClient.stackDelete(
+					System.exit(HeatStacksClient.delete(
 						heat, args[2], args[3]));
 				}
 
 				if ("stack-list".equals(args[1])) {
-					System.exit(HeatStacksClient.stackList(
+					System.exit(HeatStacksClient.list(
 						heat));
 				}
 
 				if ("resource-type-list".equals(args[1])) {
-					System.exit(
-						HeatResourceTypeClient.resourceTypeList(heat));
+					System.exit(HeatResourceTypeClient.list(
+						heat));
 				}
 
 				if ("resource-type-show".equals(args[1])) {
 					System.exit(
-						HeatResourceTypeClient.resourceTypeShow(
+						HeatResourceTypeClient.show(
 							heat, args[2]));
 				}
 
 				if ("stack-resource-list".equals(args[1])) {
 					System.exit(
-						HeatResourceClient.stackResourceList(
+						HeatResourceClient.list(
 							heat, args[2], args[3]));
 				}
 
 				if ("stack-resource-show".equals(args[1])) {
 					System.exit(
-						HeatResourceClient.stackResourceShow(
-							heat, args[2], args[3], args[4]));
+						HeatResourceClient.show(
+							heat, args[2], args[3],
+							args[4]));
 				}
 
 				if ("stack-resource-metadata-show".equals(args[1])) {
 					System.exit(
-						HeatResourceClient.stackResourceMetadataShow(
-							heat, args[2], args[3], args[4]));
+						HeatResourceClient.metadata(
+							heat, args[2], args[3],
+							args[4]));
 				}
 			}
 
@@ -177,7 +179,8 @@ public class HeatClient {
 
 		// TODO: region & facing to be configurable?
 		final String heatEndpoint = KeystoneUtils.findEndpointURL(
-			access.getServiceCatalog(), "orchestration", "RegionOne", "public");
+			access.getServiceCatalog(), "orchestration",
+			"RegionOne", "public");
 
 		System.out.println("Heat endpoint: " + heatEndpoint);
 		final Heat heat = new Heat(heatEndpoint);
