@@ -78,6 +78,9 @@ public class HeatClient {
 							heat, args[2], args[3],
 							args[4]));
 				}
+
+				System.out.println(
+					"Unknown subcommand '" + args[1] + "'.");
 			}
 
 			System.out.format(
@@ -165,7 +168,7 @@ public class HeatClient {
 	public static Access getAccess(final Keystone keystone) {
 		final String user = System.getProperty("keystoneUser",
 			ExamplesConfiguration.KEYSTONE_USERNAME);
-		final String password = System.getProperty("kaystonePassword",
+		final String password = System.getProperty("keystonePassword",
 			ExamplesConfiguration.KEYSTONE_PASSWORD);
 		final String tenant = System.getProperty("tenant",
 			ExamplesConfiguration.TENANT_NAME);
