@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Clean and Build (without signing)</actionName>
+            <displayName>Clean and Build (without signing)</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skip.sign>true</skip.sign>
+            </properties>
+        </action>
+    </actions>
