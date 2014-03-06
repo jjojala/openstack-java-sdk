@@ -34,6 +34,7 @@ import com.woorea.openstack.nova.model.ServerForCreate;
 import com.woorea.openstack.nova.model.Servers;
 import com.woorea.openstack.nova.model.VolumeAttachment;
 import com.woorea.openstack.nova.model.VolumeAttachments;
+import org.codehaus.jackson.node.ObjectNode;
 
 public class ServersResource {
 
@@ -67,9 +68,12 @@ public class ServersResource {
 		return new ReplaceMetadata(id,metadata);
 	}
 
-
 	public Delete delete(String id) {
 		return new Delete(id);
+	}
+
+	public UsageData usageData(String id) {
+		return new UsageData(id);
 	}
 
 	public class List extends OpenStackRequest<Servers> {
@@ -114,6 +118,7 @@ public class ServersResource {
 		}
 
 	}
+	
 	public class ReplaceMetadata extends OpenStackRequest<Metadata> {
 
 		public ReplaceMetadata(String id,Metadata metadata) {
@@ -122,11 +127,18 @@ public class ServersResource {
 
 	}
 	
-	
 	public class Delete extends OpenStackRequest<Void> {
 
 		public Delete(String id) {
 			super(CLIENT, HttpMethod.DELETE, new StringBuilder("/servers/").append(id), null, Void.class);
+		}
+
+	}
+	
+	public class UsageData extends OpenStackRequest<ObjectNode> {
+
+		public UsageData(String id) {
+			super(CLIENT, HttpMethod.GET, new StringBuilder("/servers/").append(id).append("/diagnostics"), null, ObjectNode.class);
 		}
 
 	}
@@ -158,19 +170,21 @@ public class ServersResource {
 
 	}
 
-	public class ChangePasswordAction extends Action<Server> {
-
-		private ChangePassword action;
+	public class ChangePasswordAction extends Action<Void> {
 
 		public ChangePasswordAction(String id, ChangePassword action) {
-			super(id, Entity.json(action), Server.class);
+			super(id, Entity.json(action), Void.class);
 		}
 
 	}
 
-	public class RebootAction extends Action<Void> {
+	public ChangePasswordAction changePassword(String id, String password) {
+		final ChangePassword request = new ChangePassword();
+		request.setAdminPass(password);
+		return new ChangePasswordAction(id, request);
+	}
 
-		private Reboot action;
+	public class RebootAction extends Action<Void> {
 
 		public RebootAction(String id, Reboot action) {
 			super(id, Entity.json(action), Void.class);
@@ -178,50 +192,70 @@ public class ServersResource {
 
 	}
 
-	public class RebuildAction extends Action<Server> {
+	public RebootAction reboot(String serverId, boolean hard) {
+		final Reboot rebootSpec = new Reboot();
+		rebootSpec.setType(hard == true ? "HARD" : "SOFT");
+		return new RebootAction(serverId, rebootSpec);
+	}
 
-		private Rebuild action;
+	public class RebuildAction extends Action<Void> {
 
 		public RebuildAction(String id, Rebuild action) {
-			super(id, Entity.json(action), Server.class);
+			super(id, Entity.json(action), Void.class);
 		}
 
 	}
 
-	public class ResizeAction extends Action<Server> {
+	public RebuildAction rebuild(String serverId, Rebuild rebuildSpec) {
+		return new RebuildAction(serverId, rebuildSpec);
+	}
 
-		private Resize action;
+	public class ResizeAction extends Action<Void> {
 
 		public ResizeAction(String id, Resize action) {
-			super(id, Entity.json(action), Server.class);
+			super(id, Entity.json(action), Void.class);
 		}
 
 	}
 
-	public class ConfirmResizeAction extends Action<Server> {
+	public ResizeAction resize(String id, Resize resizeSpec) {
+		return new ResizeAction(id, resizeSpec);
+	}
+
+	public class ConfirmResizeAction extends Action<Void> {
 
 		public ConfirmResizeAction(String id) {
-			super(id, Entity.json(new ConfirmResize()), Server.class);
+			super(id, Entity.json(new ConfirmResize()), Void.class);
 		}
 
 	}
 
-	public class ReverResizeAction extends Action<Server> {
+	public ConfirmResizeAction confirmResize(String id) {
+		return new ConfirmResizeAction(id);
+	}
+
+	public class ReverResizeAction extends Action<Void> {
 
 		public ReverResizeAction(String id) {
-			super(id, Entity.json(new RevertResize()), Server.class);
+			super(id, Entity.json(new RevertResize()), Void.class);
 		}
 
 	}
 
-	public class CreateImageAction extends Action<Server> {
+	public ReverResizeAction revertResize(String id) {
+		return new ReverResizeAction(id);
+	}
 
-		private CreateImage action;
+	public class CreateImageAction extends Action<Void> {
 
-		public CreateImageAction(String id) {
-			super(id, Entity.json(new CreateImage()), Server.class);
+		public CreateImageAction(String id, CreateImage imageSpec) {
+			super(id, Entity.json(imageSpec), Void.class);
 		}
 
+	}
+
+	public CreateImageAction createImage(String serverId, CreateImage imageSpec) {
+		return new CreateImageAction(serverId, imageSpec);
 	}
 
 	public class StartServer extends OpenStackRequest<Void> {
