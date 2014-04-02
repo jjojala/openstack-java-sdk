@@ -61,11 +61,11 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
-
-import org.glassfish.jersey.message.internal.HeadersFactory;
 
 /**
  * Universal logging filter.
@@ -200,7 +200,7 @@ public class Jersey2LoggingFilter implements ContainerRequestFilter, ClientReque
 
         printRequestLine(b, id, context.getMethod(), context.getUri());
         // TODO: change to context.getStringHeaders() once the method is added to the API
-        printPrefixedHeaders(b, id, REQUEST_PREFIX, HeadersFactory.asStringHeaders(context.getHeaders()));
+        printPrefixedHeaders(b, id, REQUEST_PREFIX, asStringHeaders(context.getHeaders()));
 
         if (printEntity && context.hasEntity()) {
             OutputStream stream = new LoggingStream(b, context.getEntityStream());
@@ -249,7 +249,7 @@ public class Jersey2LoggingFilter implements ContainerRequestFilter, ClientReque
 
         printResponseLine(b, id, responseContext.getStatus());
         // TODO: change to context.getStringHeaders() once the method is added to the API
-        printPrefixedHeaders(b, id, RESPONSE_PREFIX, HeadersFactory.asStringHeaders(responseContext.getHeaders()));
+        printPrefixedHeaders(b, id, RESPONSE_PREFIX, asStringHeaders(responseContext.getHeaders()));
 
         if (printEntity && responseContext.hasEntity()) {
             OutputStream stream = new LoggingStream(b, responseContext.getEntityStream());
@@ -268,6 +268,37 @@ public class Jersey2LoggingFilter implements ContainerRequestFilter, ClientReque
         if (stream != null) {
             log(stream.getStringBuilder());
         }
+    }
+
+    private static MultivaluedMap<String, String> asStringHeaders(
+            final MultivaluedMap<String, Object> headers) {
+
+        // NOTE: This method becomes obsolete when JAX-RS API contain
+        //       getStringHeaders() method (and it's widely in use)
+
+        if (headers == null) {
+            return null;
+        }
+
+        final MultivaluedMap<String, String> result =
+                new MultivaluedHashMap<String, String>();
+        final RuntimeDelegate rd = RuntimeDelegate.getInstance();
+
+        for (final Map.Entry<String, List<Object>> e: headers.entrySet()) {
+            if (e.getValue() == null || e.getValue().isEmpty()) {
+                result.add(e.getKey(), "[null]");
+            } else {
+                for (final Object header: e.getValue()) {
+                    final RuntimeDelegate.HeaderDelegate delegate =
+                            rd.createHeaderDelegate(header.getClass());
+                    final String headerValue = delegate == null
+                            ? header.toString() : delegate.toString(header);
+                    result.add(e.getKey(), headerValue);
+                }
+            }
+        }
+
+        return result;
     }
 
     private class LoggingStream extends OutputStream {
